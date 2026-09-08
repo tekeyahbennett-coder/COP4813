@@ -1,0 +1,174 @@
+/* ==========================================================================
+   style.css
+   Single external stylesheet for Te'Keyah Bennett's COP4813 web site.
+   Plain, high-contrast layout: black text on white, one accent color.
+   ========================================================================== */
+
+:root {
+  --accent: #154360;      /* single accent color, used sparingly */
+  --text: #1a1a1a;        /* near-black body text */
+  --bg: #ffffff;          /* white background */
+  --border: #cccccc;
+  --focus: #b45309;       /* distinct, high-contrast focus outline color */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: Georgia, "Times New Roman", Times, serif;
+  line-height: 1.6;
+}
+
+/* Skip link for keyboard / screen-reader users (ADA/WCAG 2.4.1) */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--accent);
+  color: #ffffff;
+  padding: 0.75em 1em;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* Visible, high-contrast focus indicator on every interactive element */
+a:focus,
+button:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+header {
+  border-bottom: 3px solid var(--accent);
+  padding: 1.5rem 1rem;
+}
+
+header h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.9rem;
+  color: var(--text);
+}
+
+header p.tagline {
+  margin: 0;
+  font-style: italic;
+  color: #444444;
+}
+
+/* Primary navigation menu */
+nav.main-nav {
+  background-color: var(--accent);
+}
+
+nav.main-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+nav.main-nav li {
+  margin: 0;
+}
+
+nav.main-nav a {
+  display: block;
+  padding: 0.85em 1.25em;
+  color: #ffffff;
+  text-decoration: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+}
+
+nav.main-nav a:hover,
+nav.main-nav a:focus {
+  background-color: #ffffff;
+  color: var(--accent);
+}
+
+nav.main-nav a[aria-current="page"] {
+  background-color: #ffffff;
+  color: var(--accent);
+}
+
+main {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem 1.25rem;
+}
+
+main h2 {
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3em;
+}
+
+main h3 {
+  color: var(--text);
+}
+
+a {
+  color: var(--accent);
+}
+
+a:visited {
+  color: #4a3b6b;
+}
+
+ul.plain-list,
+ol.plain-list {
+  padding-left: 1.25rem;
+}
+
+.about-graphic {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0 1.5rem 0;
+  border: 1px solid var(--border);
+}
+
+.card {
+  border: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.you-are-here {
+  font-weight: bold;
+}
+
+.note {
+  font-size: 0.9rem;
+  color: #444444;
+}
+
+footer {
+  border-top: 3px solid var(--accent);
+  padding: 1.25rem;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  color: #444444;
+}
+
+@media (max-width: 40rem) {
+  nav.main-nav ul {
+    flex-direction: column;
+  }
+}

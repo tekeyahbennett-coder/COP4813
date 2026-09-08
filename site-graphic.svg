@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" role="img" aria-labelledby="siteGraphicTitle siteGraphicDesc">
+  <title id="siteGraphicTitle">Web development illustration</title>
+  <desc id="siteGraphicDesc">A simple line illustration of a laptop displaying code brackets, representing web programming coursework.</desc>
+
+  <!-- laptop base -->
+  <path d="M60 210 L340 210 L360 235 L40 235 Z" fill="#154360"/>
+  <rect x="70" y="230" width="260" height="8" fill="#0d2c3f"/>
+
+  <!-- laptop screen -->
+  <rect x="90" y="40" width="220" height="150" rx="6" fill="none" stroke="#154360" stroke-width="6"/>
+  <rect x="102" y="52" width="196" height="126" fill="#f2f6f9"/>
+
+  <!-- code brackets -->
+  <text x="200" y="130" font-family="Consolas, 'Courier New', monospace" font-size="64" font-weight="bold"
+        fill="#154360" text-anchor="middle">&lt;/&gt;</text>
+
+  <!-- decorative dots (title bar) -->
+  <circle cx="114" cy="64" r="4" fill="#154360"/>
+  <circle cx="128" cy="64" r="4" fill="#154360"/>
+  <circle cx="142" cy="64" r="4" fill="#154360"/>
+</svg>
