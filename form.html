@@ -8,19 +8,19 @@
   <title>Contact Form | Te'Keyah Bennett</title>
   <style>
     :root {
-      --navy: #17324d;
-      --blue: #2b6cb0;
-      --teal: #0f766e;
-      --teal-dark: #0b5a54;
-      --bg: #f2f6fa;
+      --navy: #4a3672;
+      --blue: #8b6fc4;
+      --teal: #7c5cbf;
+      --teal-dark: #63479c;
+      --bg: #f6f2fc;
       --card: #ffffff;
-      --text: #1b2733;
-      --muted: #52606d;
-      --border: #c5d0db;
+      --text: #2b2338;
+      --muted: #6b5c82;
+      --border: #ddd0f0;
       --error: #b42318;
       --error-bg: #fef3f2;
       --ok: #067647;
-      --focus: #1d4ed8;
+      --focus: #7c5cbf;
     }
     * { box-sizing: border-box; }
     body {
@@ -47,7 +47,7 @@
       display: flex; flex-wrap: wrap; gap: .25rem;
     }
     nav a {
-      display: block; padding: .6rem 1rem; color: #e6f0fa; text-decoration: none;
+      display: block; padding: .6rem 1rem; color: #ece3fb; text-decoration: none;
       border-radius: 8px 8px 0 0; font-weight: 500;
     }
     nav a:hover { background: rgba(255,255,255,.15); color: #fff; }
@@ -59,14 +59,14 @@
     .lead { margin: 0 0 1.5rem; color: var(--muted); }
 
     .card {
-      background: var(--card); border: 1px solid #dbe4ed; border-radius: 14px;
-      padding: 1.5rem; box-shadow: 0 6px 20px rgba(23, 50, 77, .07);
+      background: var(--card); border: 1px solid #e4d9f5; border-radius: 14px;
+      padding: 1.5rem; box-shadow: 0 6px 20px rgba(74, 54, 114, .08);
     }
     fieldset { border: 0; padding: 0; margin: 0 0 1.75rem; }
     legend {
       font-size: 1.1rem; font-weight: 700; color: var(--teal-dark);
       padding: 0 0 .5rem; margin-bottom: .75rem; width: 100%;
-      border-bottom: 2px solid #d9ece9;
+      border-bottom: 2px solid #e4d9f5;
     }
     .row { display: grid; gap: 1rem; margin-bottom: 1rem; }
     .row.two { grid-template-columns: 1fr 1fr; }
@@ -86,7 +86,7 @@
     }
     textarea { resize: vertical; min-height: 130px; }
     input:focus, select:focus, textarea:focus {
-      outline: 3px solid rgba(29, 78, 216, .35); border-color: var(--focus);
+      outline: 3px solid rgba(124, 92, 191, .35); border-color: var(--focus);
     }
     input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] {
       border-color: var(--error); background: var(--error-bg);
@@ -102,7 +102,7 @@
 
     .human { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
     .human .q {
-      background: #eef7f6; border: 1px dashed var(--teal); border-radius: 8px;
+      background: #f1eafa; border: 1px dashed var(--teal); border-radius: 8px;
       padding: .6rem 1rem; font-weight: 700; color: var(--teal-dark); font-size: 1.1rem;
       white-space: nowrap;
     }
