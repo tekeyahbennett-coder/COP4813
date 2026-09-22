@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Te'Keyah Bennett">
+  <meta name="description" content="Confirmation page for the COP4813 Assignment 3 contact form.">
+  <title>Confirm Your Information | Te'Keyah Bennett</title>
+  <style>
+    :root {
+      --navy: #17324d;
+      --blue: #2b6cb0;
+      --teal: #0f766e;
+      --teal-dark: #0b5a54;
+      --bg: #f2f6fa;
+      --card: #ffffff;
+      --text: #1b2733;
+      --muted: #52606d;
+      --border: #c5d0db;
+      --ok: #067647;
+      --focus: #1d4ed8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #fff; color: var(--navy); padding: .6rem 1rem; z-index: 10;
+    }
+    .skip-link:focus { left: 0; }
+
+    header.site {
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      color: #fff;
+      padding: 1rem 1.25rem 0;
+    }
+    header.site .brand { max-width: 760px; margin: 0 auto; font-weight: 600; font-size: 1.05rem; }
+    nav ul {
+      max-width: 760px; margin: .6rem auto 0; padding: 0; list-style: none;
+      display: flex; flex-wrap: wrap; gap: .25rem;
+    }
+    nav a {
+      display: block; padding: .6rem 1rem; color: #e6f0fa; text-decoration: none;
+      border-radius: 8px 8px 0 0; font-weight: 500;
+    }
+    nav a:hover { background: rgba(255,255,255,.15); color: #fff; }
+    nav a[aria-current="page"] { background: var(--bg); color: var(--navy); }
+    nav a:focus-visible { outline: 3px solid #fff; outline-offset: -3px; }
+
+    main { max-width: 760px; margin: 0 auto; padding: 1.75rem 1.25rem 3rem; }
+    h1 { margin: 0 0 .25rem; font-size: 1.9rem; color: var(--navy); }
+    h2 { margin: 0 0 .5rem; font-size: 1.3rem; color: var(--teal-dark); }
+    .lead { margin: 0 0 1.5rem; color: var(--muted); }
+    @media (max-width: 620px) { h1 { font-size: 1.6rem; } }
+
+    .card {
+      background: var(--card); border: 1px solid #dbe4ed; border-radius: 14px;
+      padding: 1.5rem; box-shadow: 0 6px 20px rgba(23, 50, 77, .07); margin-bottom: 1.25rem;
+    }
+    dl { margin: 0; }
+    .item { display: grid; grid-template-columns: 11rem 1fr; gap: .25rem 1rem; padding: .75rem 0; border-bottom: 1px solid #e6edf4; }
+    .item:last-child { border-bottom: 0; }
+    dt { font-weight: 700; color: var(--navy); }
+    dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+    @media (max-width: 560px) { .item { grid-template-columns: 1fr; } }
+
+    .actions { display: flex; gap: .75rem; flex-wrap: wrap; align-items: center; }
+    button.primary, a.button {
+      display: inline-block; font: inherit; font-weight: 700; cursor: pointer;
+      background: var(--teal); color: #fff; border: 2px solid var(--teal);
+      border-radius: 10px; padding: .75rem 1.6rem; text-decoration: none;
+    }
+    button.primary:hover, a.button:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+    a.secondary, button.secondary {
+      display: inline-block; font: inherit; font-weight: 600; cursor: pointer; background: #fff; color: var(--navy);
+      border: 2px solid var(--border); border-radius: 10px; padding: .75rem 1.4rem; text-decoration: none;
+    }
+    a.secondary:hover, button.secondary:hover { border-color: var(--navy); }
+    button:focus-visible, a:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+    .thanks { border-left: 6px solid var(--ok); }
+    .thanks p { margin: .4rem 0; }
+    .thanks[hidden], #details[hidden], #empty[hidden] { display: none; }
+    .copied { color: var(--ok); font-weight: 600; margin-left: .25rem; }
+    footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 0 1rem 2rem; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site">
+    <div class="brand">Te'Keyah Bennett &middot; COP4813 Web Programming</div>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="classes.html">My Classes</a></li>
+        <li><a href="assignments.html">My Assignments</a></li>
+        <li><a href="form.html" aria-current="page">Contact Form</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <h1>Please Confirm Your Information</h1>
+
+    <!-- Shown when there is nothing to confirm (page opened directly) -->
+    <div id="empty" class="card" hidden>
+      <h2>Nothing to confirm yet</h2>
+      <p>We could not find any form entries. Please fill out the form first.</p>
+      <a class="button" href="form.html">Go to the form</a>
+    </div>
+
+    <section id="details" hidden>
+      <p class="lead" id="lead">Check that everything below is correct. If it is, press <strong>Confirm and send</strong>. If not, press <strong>Edit my information</strong> to fix it.</p>
+
+      <div class="card">
+        <dl id="summary"></dl>
+      </div>
+
+      <!--
+        The form action uses mailto: so the answers go to the email address below.
+        The hidden fields are filled in by the script from the information entered on form.html.
+      -->
+      <form id="sendForm" action="mailto:tekeyahbennett@gmail.com?subject=COP4813%20Assignment%203%20Form%20Submission" method="post" enctype="text/plain">
+        <div id="hiddenFields"></div>
+        <div class="actions" id="actions">
+          <button type="submit" class="primary">Confirm and send</button>
+          <a class="secondary" href="form.html">Edit my information</a>
+        </div>
+      </form>
+    </section>
+
+    <section id="thanks" class="card thanks" hidden aria-live="polite">
+      <h2>Thank you, <span id="thanksName"></span>!</h2>
+      <p>Your email program should have opened with your information ready to send. Press <strong>Send</strong> in that window to finish.</p>
+      <p>If nothing opened, copy your details and email them to <a href="mailto:tekeyahbennett@gmail.com">tekeyahbennett@gmail.com</a>.</p>
+      <div class="actions" style="margin-top:.75rem;">
+        <button type="button" class="secondary" id="copyBtn">Copy my details</button>
+        <span id="copiedMsg" class="copied" role="status"></span>
+        <a class="secondary" href="form.html" id="newForm">Fill out a new form</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>COP4813 &middot; Assignment 3: Forms &middot; Te'Keyah Bennett</footer>
+
+  <script>
+  (function () {
+    "use strict";
+    var $ = function (id) { return document.getElementById(id); };
+
+    var STATES = {
+      AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",CO:"Colorado",CT:"Connecticut",
+      DE:"Delaware",DC:"District of Columbia",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",
+      IN:"Indiana",IA:"Iowa",KS:"Kansas",KY:"Kentucky",LA:"Louisiana",ME:"Maine",MD:"Maryland",
+      MA:"Massachusetts",MI:"Michigan",MN:"Minnesota",MS:"Mississippi",MO:"Missouri",MT:"Montana",
+      NE:"Nebraska",NV:"Nevada",NH:"New Hampshire",NJ:"New Jersey",NM:"New Mexico",NY:"New York",
+      NC:"North Carolina",ND:"North Dakota",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",
+      RI:"Rhode Island",SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",
+      VT:"Vermont",VA:"Virginia",WA:"Washington",WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming"
+    };
+
+    // Load what the user entered on form.html
+    var data = null, json = null;
+    try { json = sessionStorage.getItem("cop4813_form"); } catch (e) {}
+    if (!json) {
+      try {
+        var p = new URLSearchParams(location.search).get("d");
+        if (p) json = decodeURIComponent(escape(atob(p)));
+      } catch (e) {}
+    }
+    try { data = json ? JSON.parse(json) : null; } catch (e) { data = null; }
+
+    var required = ["firstname", "lastname", "address", "city", "state", "zip", "phone", "email", "birthdate", "message", "confirm"];
+    var ok = data && required.every(function (k) { return typeof data[k] === "string" && data[k] !== ""; });
+
+    if (!ok) { $("empty").hidden = false; return; }
+
+    // Rows shown to the user (textContent is used everywhere, so nothing typed can run as code)
+    var rows = [
+      ["Name", data.firstname + " " + data.lastname],
+      ["Street address", data.address],
+      data.address2 ? ["Apt / Suite", data.address2] : null,
+      ["City", data.city],
+      ["State", (STATES[data.state] ? STATES[data.state] + " (" + data.state + ")" : data.state)],
+      ["ZIP code", data.zip],
+      ["Phone", data.phone],
+      ["Email", data.email],
+      ["Birth date", data.birthdate],
+      ["Message", data.message],
+      ["Human check", data.confirm]
+    ].filter(Boolean);
+
+    var dl = $("summary");
+    rows.forEach(function (r) {
+      var wrap = document.createElement("div");
+      wrap.className = "item";
+      var dt = document.createElement("dt"); dt.textContent = r[0];
+      var dd = document.createElement("dd"); dd.textContent = r[1];
+      wrap.appendChild(dt); wrap.appendChild(dd);
+      dl.appendChild(wrap);
+    });
+
+    // Hidden inputs so the mailto form sends every field
+    var order = ["firstname", "lastname", "address", "address2", "city", "state", "zip", "phone", "email", "birthdate", "message", "confirm"];
+    var hidden = $("hiddenFields");
+    order.forEach(function (k) {
+      var inp = document.createElement("input");
+      inp.type = "hidden"; inp.name = k; inp.value = data[k] || "";
+      hidden.appendChild(inp);
+    });
+
+    $("details").hidden = false;
+
+    // Plain-text copy of the details (used for the "Copy my details" fallback)
+    function asText() {
+      return order.map(function (k) { return k + ": " + (data[k] || ""); }).join("\n");
+    }
+
+    // After Confirm and send: the email program opens, so show a thank-you note
+    $("sendForm").addEventListener("submit", function () {
+      setTimeout(function () {
+        $("thanksName").textContent = data.firstname;
+        $("details").hidden = true;
+        $("thanks").hidden = false;
+        window.scrollTo(0, 0);
+      }, 400);
+    });
+
+    $("copyBtn").addEventListener("click", function () {
+      var msg = $("copiedMsg");
+      function done(text) { msg.textContent = text; setTimeout(function () { msg.textContent = ""; }, 3000); }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(asText()).then(function () { done("Copied!"); }, function () { done("Copy failed. Select and copy the details above instead."); });
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = asText(); document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); done("Copied!"); } catch (e) { done("Copy failed."); }
+        document.body.removeChild(ta);
+      }
+    });
+
+    // Starting a new form clears the saved entries
+    $("newForm").addEventListener("click", function () {
+      try { sessionStorage.removeItem("cop4813_form"); } catch (e) {}
+    });
+  })();
+  </script>
+</body>
+</html>

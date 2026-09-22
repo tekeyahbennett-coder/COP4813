@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Te'Keyah Bennett">
+  <meta name="description" content="Contact form for COP4813 Assignment 3, built with HTML5 and JavaScript validation.">
+  <title>Contact Form | Te'Keyah Bennett</title>
+  <style>
+    :root {
+      --navy: #17324d;
+      --blue: #2b6cb0;
+      --teal: #0f766e;
+      --teal-dark: #0b5a54;
+      --bg: #f2f6fa;
+      --card: #ffffff;
+      --text: #1b2733;
+      --muted: #52606d;
+      --border: #c5d0db;
+      --error: #b42318;
+      --error-bg: #fef3f2;
+      --ok: #067647;
+      --focus: #1d4ed8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #fff; color: var(--navy); padding: .6rem 1rem; z-index: 10;
+    }
+    .skip-link:focus { left: 0; }
+
+    header.site {
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      color: #fff;
+      padding: 1rem 1.25rem 0;
+    }
+    header.site .brand { max-width: 760px; margin: 0 auto; font-weight: 600; font-size: 1.05rem; }
+    nav ul {
+      max-width: 760px; margin: .6rem auto 0; padding: 0; list-style: none;
+      display: flex; flex-wrap: wrap; gap: .25rem;
+    }
+    nav a {
+      display: block; padding: .6rem 1rem; color: #e6f0fa; text-decoration: none;
+      border-radius: 8px 8px 0 0; font-weight: 500;
+    }
+    nav a:hover { background: rgba(255,255,255,.15); color: #fff; }
+    nav a[aria-current="page"] { background: var(--bg); color: var(--navy); }
+    nav a:focus-visible { outline: 3px solid #fff; outline-offset: -3px; }
+
+    main { max-width: 760px; margin: 0 auto; padding: 1.75rem 1.25rem 3rem; }
+    h1 { margin: 0 0 .25rem; font-size: 1.9rem; color: var(--navy); }
+    .lead { margin: 0 0 1.5rem; color: var(--muted); }
+
+    .card {
+      background: var(--card); border: 1px solid #dbe4ed; border-radius: 14px;
+      padding: 1.5rem; box-shadow: 0 6px 20px rgba(23, 50, 77, .07);
+    }
+    fieldset { border: 0; padding: 0; margin: 0 0 1.75rem; }
+    legend {
+      font-size: 1.1rem; font-weight: 700; color: var(--teal-dark);
+      padding: 0 0 .5rem; margin-bottom: .75rem; width: 100%;
+      border-bottom: 2px solid #d9ece9;
+    }
+    .row { display: grid; gap: 1rem; margin-bottom: 1rem; }
+    .row.two { grid-template-columns: 1fr 1fr; }
+    .row.three { grid-template-columns: 2fr 1.4fr 1fr; }
+    @media (max-width: 620px) {
+      .row.two, .row.three { grid-template-columns: 1fr; }
+      h1 { font-size: 1.6rem; }
+    }
+    .field { display: flex; flex-direction: column; min-width: 0; }
+    label { font-weight: 600; margin-bottom: .3rem; font-size: .95rem; }
+    .req { color: var(--error); }
+    .opt { color: var(--muted); font-weight: 400; }
+    input, select, textarea {
+      font: inherit; color: var(--text); background: #fff;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      padding: .65rem .75rem; width: 100%;
+    }
+    textarea { resize: vertical; min-height: 130px; }
+    input:focus, select:focus, textarea:focus {
+      outline: 3px solid rgba(29, 78, 216, .35); border-color: var(--focus);
+    }
+    input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] {
+      border-color: var(--error); background: var(--error-bg);
+    }
+    input.valid, select.valid, textarea.valid { border-color: var(--ok); }
+    .hint { margin: .3rem 0 0; font-size: .85rem; color: var(--muted); }
+    .error {
+      margin: .3rem 0 0; font-size: .875rem; font-weight: 600; color: var(--error);
+    }
+    .error:empty { display: none; }
+    .error::before { content: "\26A0\FE0E  "; }
+    .counter { text-align: right; font-size: .8rem; color: var(--muted); margin-top: .2rem; }
+
+    .human { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+    .human .q {
+      background: #eef7f6; border: 1px dashed var(--teal); border-radius: 8px;
+      padding: .6rem 1rem; font-weight: 700; color: var(--teal-dark); font-size: 1.1rem;
+      white-space: nowrap;
+    }
+    .human input { width: 6.5rem; }
+    .linkbtn {
+      background: none; border: 0; padding: .25rem; color: var(--blue); cursor: pointer;
+      text-decoration: underline; font: inherit; width: auto;
+    }
+    .honey { position: absolute; left: -9999px; height: 0; overflow: hidden; }
+
+    .summary {
+      background: var(--error-bg); border: 1.5px solid var(--error); color: var(--error);
+      border-radius: 10px; padding: .75rem 1rem; margin-bottom: 1.25rem; font-weight: 600;
+    }
+    .summary:empty { display: none; }
+
+    .actions { display: flex; gap: .75rem; flex-wrap: wrap; align-items: center; }
+    button.primary, a.button {
+      display: inline-block; font: inherit; font-weight: 700; cursor: pointer;
+      background: var(--teal); color: #fff; border: 2px solid var(--teal);
+      border-radius: 10px; padding: .75rem 1.6rem; text-decoration: none;
+    }
+    button.primary:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+    button.secondary {
+      font: inherit; font-weight: 600; cursor: pointer; background: #fff; color: var(--navy);
+      border: 2px solid var(--border); border-radius: 10px; padding: .75rem 1.4rem;
+    }
+    button.secondary:hover { border-color: var(--navy); }
+    button:focus-visible, a:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+    footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 0 1rem 2rem; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site">
+    <div class="brand">Te'Keyah Bennett &middot; COP4813 Web Programming</div>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="classes.html">My Classes</a></li>
+        <li><a href="assignments.html">My Assignments</a></li>
+        <li><a href="form.html" aria-current="page">Contact Form</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <h1>Contact Form</h1>
+    <p class="lead">Fill out every field below. You will get a chance to review your answers before anything is sent.</p>
+
+    <form id="contactForm" class="card" novalidate autocomplete="on">
+      <div id="formSummary" class="summary" role="alert"></div>
+
+      <fieldset>
+        <legend>Your Name</legend>
+        <div class="row two">
+          <div class="field">
+            <label for="firstname">First name <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="firstname" name="firstname" autocomplete="given-name" maxlength="40" required aria-describedby="err-firstname">
+            <p class="error" id="err-firstname" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="lastname">Last name <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="lastname" name="lastname" autocomplete="family-name" maxlength="40" required aria-describedby="err-lastname">
+            <p class="error" id="err-lastname" aria-live="polite"></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Mailing Address</legend>
+        <div class="row">
+          <div class="field">
+            <label for="address">Street address <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="address" name="address" autocomplete="address-line1" maxlength="100" placeholder="123 Main St" required aria-describedby="hint-address err-address">
+            <p class="hint" id="hint-address">Start with the house number, e.g. 123 Main St. A P.O. Box (P.O. Box 45) is also accepted.</p>
+            <p class="error" id="err-address" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="address2">Apt, suite, unit <span class="opt">(optional)</span></label>
+            <input type="text" id="address2" name="address2" autocomplete="address-line2" maxlength="30" placeholder="Apt 4B" aria-describedby="err-address2">
+            <p class="error" id="err-address2" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="row three">
+          <div class="field">
+            <label for="city">City <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="city" name="city" autocomplete="address-level2" maxlength="50" required aria-describedby="err-city">
+            <p class="error" id="err-city" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="state">State <span class="req" aria-hidden="true">*</span></label>
+            <select id="state" name="state" autocomplete="address-level1" required aria-describedby="err-state">
+              <option value="">Select a state</option>
+            </select>
+            <p class="error" id="err-state" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="zip">ZIP code <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="zip" name="zip" autocomplete="postal-code" inputmode="numeric" maxlength="10" placeholder="32114" required aria-describedby="err-zip">
+            <p class="error" id="err-zip" aria-live="polite"></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Contact Details</legend>
+        <div class="row two">
+          <div class="field">
+            <label for="phone">Phone number <span class="req" aria-hidden="true">*</span></label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel-national" inputmode="numeric" placeholder="(386)555-0123" required aria-describedby="hint-phone err-phone">
+            <p class="hint" id="hint-phone">Just type the 10 digits. The format fills in for you.</p>
+            <p class="error" id="err-phone" aria-live="polite"></p>
+          </div>
+          <div class="field">
+            <label for="email">Email address <span class="req" aria-hidden="true">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" maxlength="254" placeholder="name@example.com" required aria-describedby="err-email">
+            <p class="error" id="err-email" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field" style="max-width: 16rem;">
+            <label for="birthdate">Birth date <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="birthdate" name="birthdate" autocomplete="off" inputmode="numeric" maxlength="10" placeholder="MM/DD/YYYY" required aria-describedby="hint-birthdate err-birthdate">
+            <p class="hint" id="hint-birthdate">Format: MM/DD/YYYY</p>
+            <p class="error" id="err-birthdate" aria-live="polite"></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Your Message</legend>
+        <div class="row">
+          <div class="field">
+            <label for="message">Message <span class="req" aria-hidden="true">*</span></label>
+            <textarea id="message" name="message" maxlength="1000" placeholder="Type your message here (at least 10 characters)." required aria-describedby="err-message"></textarea>
+            <div class="counter" id="counter" aria-hidden="true">0 / 1000</div>
+            <p class="error" id="err-message" aria-live="polite"></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Human Check</legend>
+        <div class="field">
+          <label for="confirm">Please answer this question to show you are not a robot <span class="req" aria-hidden="true">*</span></label>
+          <div class="human">
+            <span class="q" id="question" aria-live="polite"></span>
+            <input type="text" id="confirm" name="confirm" inputmode="numeric" autocomplete="off" maxlength="3" required aria-describedby="err-confirm">
+            <button type="button" class="linkbtn" id="newQuestion">New question</button>
+          </div>
+          <p class="error" id="err-confirm" aria-live="polite"></p>
+        </div>
+        <!-- Honeypot: real people never see or fill this in. Bots often do. -->
+        <div class="honey" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="submit" class="primary">Review my information</button>
+        <button type="reset" class="secondary" id="resetBtn">Clear form</button>
+      </div>
+    </form>
+  </main>
+
+  <footer>COP4813 &middot; Assignment 3: Forms &middot; Te'Keyah Bennett</footer>
+
+  <script>
+  (function () {
+    "use strict";
+
+    var STATES = {
+      AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",CO:"Colorado",CT:"Connecticut",
+      DE:"Delaware",DC:"District of Columbia",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",
+      IN:"Indiana",IA:"Iowa",KS:"Kansas",KY:"Kentucky",LA:"Louisiana",ME:"Maine",MD:"Maryland",
+      MA:"Massachusetts",MI:"Michigan",MN:"Minnesota",MS:"Mississippi",MO:"Missouri",MT:"Montana",
+      NE:"Nebraska",NV:"Nevada",NH:"New Hampshire",NJ:"New Jersey",NM:"New Mexico",NY:"New York",
+      NC:"North Carolina",ND:"North Dakota",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",
+      RI:"Rhode Island",SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",
+      VT:"Vermont",VA:"Virginia",WA:"Washington",WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming"
+    };
+    var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+    var form = document.getElementById("contactForm");
+    var $ = function (id) { return document.getElementById(id); };
+
+    /* ---------- populate state drop-down ---------- */
+    var stateSel = $("state");
+    Object.keys(STATES).forEach(function (abbr) {
+      var o = document.createElement("option");
+      o.value = abbr;
+      o.textContent = STATES[abbr] + " (" + abbr + ")";
+      stateSel.appendChild(o);
+    });
+
+    /* ---------- input masks ---------- */
+    // Generic mask helper: keeps only digits, re-formats, and keeps the caret in the right spot.
+    function attachMask(el, maxDigits, format, normalize) {
+      el.addEventListener("input", function () {
+        var raw = el.value;
+        var caret = el.selectionStart == null ? raw.length : el.selectionStart;
+        var digitsBeforeCaret = raw.slice(0, caret).replace(/\D/g, "").length;
+        var digits = raw.replace(/\D/g, "");
+        if (normalize) digits = normalize(digits);
+        digits = digits.slice(0, maxDigits);
+        var out = format(digits);
+        el.value = out;
+        var target = Math.min(digitsBeforeCaret, digits.length), pos = 0, seen = 0;
+        while (pos < out.length && seen < target) { if (/\d/.test(out.charAt(pos))) seen++; pos++; }
+        try { el.setSelectionRange(pos, pos); } catch (e) { /* some browsers block this */ }
+      });
+    }
+
+    // (000)000-0000
+    attachMask($("phone"), 10, function (d) {
+      if (d.length === 0) return "";
+      if (d.length <= 3) return "(" + d;
+      if (d.length <= 6) return "(" + d.slice(0, 3) + ")" + d.slice(3);
+      return "(" + d.slice(0, 3) + ")" + d.slice(3, 6) + "-" + d.slice(6);
+    }, function (d) { return (d.length === 11 && d.charAt(0) === "1") ? d.slice(1) : d; });
+
+    // MM/DD/YYYY
+    attachMask($("birthdate"), 8, function (d) {
+      if (d.length <= 2) return d;
+      if (d.length <= 4) return d.slice(0, 2) + "/" + d.slice(2);
+      return d.slice(0, 2) + "/" + d.slice(2, 4) + "/" + d.slice(4);
+    });
+
+    // 12345 or 12345-6789
+    attachMask($("zip"), 9, function (d) {
+      return d.length > 5 ? d.slice(0, 5) + "-" + d.slice(5) : d;
+    });
+
+    /* ---------- validators (each returns "" when valid, or an error message) ---------- */
+    var NAME_RE = /^\p{L}[\p{L}\p{M}'’.\- ]*$/u;
+    var EMAIL_RE = /^[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,24}$/;
+
+    function checkName(label) {
+      return function (value) {
+        var v = value.trim();
+        if (!v) return "Please enter your " + label + ".";
+        if (v.length < 2) return "Your " + label + " must be at least 2 characters.";
+        if (!NAME_RE.test(v)) return "Your " + label + " can only use letters, spaces, hyphens, apostrophes, and periods.";
+        return "";
+      };
+    }
+
+    function checkAddress(value) {
+      var v = value.trim().replace(/\s+/g, " ");
+      if (!v) return "Please enter your street address.";
+      if (v.length < 5) return "That address is too short. Example: 123 Main St.";
+      if (!/^[A-Za-z0-9 .,'#\/\-]+$/.test(v)) return "The street address has characters that are not allowed. Use letters, numbers, spaces, and . , ' # / -";
+      if (/^P\.?\s?O\.?\s?Box\s+\d+$/i.test(v)) return "";
+      var m = v.match(/^(\d{1,6}[A-Za-z]?(?:-\d{1,6})?)\s+(.+)$/);
+      if (!m) return "A street address starts with a house number, like 123 Main St.";
+      if (!/[A-Za-z]{2,}/.test(m[2])) return "Please include the street name after the number, like 123 Main St.";
+      return "";
+    }
+
+    function checkAddress2(value) {
+      var v = value.trim();
+      if (!v) return ""; // optional
+      if (!/^[A-Za-z0-9 .#\/\-]{1,30}$/.test(v)) return "Use letters, numbers, and # . / - only (30 characters max). Example: Apt 4B.";
+      return "";
+    }
+
+    function checkCity(value) {
+      var v = value.trim();
+      if (!v) return "Please enter your city.";
+      if (v.length < 2) return "The city name must be at least 2 characters.";
+      if (!NAME_RE.test(v)) return "The city can only use letters, spaces, hyphens, apostrophes, and periods.";
+      return "";
+    }
+
+    function checkState(value) {
+      if (!value) return "Please select your state.";
+      if (!STATES.hasOwnProperty(value)) return "Please choose a state from the list.";
+      return "";
+    }
+
+    function checkZip(value) {
+      var v = value.trim();
+      if (!v) return "Please enter your ZIP code.";
+      if (!/^\d{5}(-\d{4})?$/.test(v)) return "A ZIP code is 5 digits (32114) or ZIP+4 (32114-1234).";
+      if (v.slice(0, 5) === "00000") return "00000 is not a real ZIP code.";
+      return "";
+    }
+
+    function checkPhone(value) {
+      var d = value.replace(/\D/g, "");
+      if (!d) return "Please enter your phone number.";
+      if (d.length < 10) return "Enter all 10 digits, including the area code. You have " + d.length + ".";
+      if (!/^[2-9]/.test(d)) return "The area code cannot start with 0 or 1.";
+      if (!/^[2-9]/.test(d.slice(3))) return "The first digit after the area code cannot be 0 or 1.";
+      if (!/^\(\d{3}\)\d{3}-\d{4}$/.test(value.trim())) return "Use the format (000)000-0000.";
+      return "";
+    }
+
+    function checkEmail(value) {
+      var v = value.trim();
+      if (!v) return "Please enter your email address.";
+      if (v.length > 254) return "That email address is too long.";
+      if (/\s/.test(v)) return "An email address cannot contain spaces.";
+      if (v.indexOf("@") === -1) return "An email address needs an @ symbol, like name@domain.com.";
+      if (v.split("@").length > 2) return "An email address can only have one @ symbol.";
+      if (/^@/.test(v)) return "Add the name before the @ symbol, like name@domain.com.";
+      if (/@$/.test(v)) return "Add the domain after the @ symbol, like name@domain.com.";
+      if (v.split("@")[1].indexOf(".") === -1) return "The domain needs an extension, like .com or .edu.";
+      if (!EMAIL_RE.test(v)) return "That does not look like a valid email. Use the format name@domain.extension.";
+      return "";
+    }
+
+    function checkBirthdate(value) {
+      var v = value.trim();
+      if (!v) return "Please enter your birth date.";
+      var m = v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+      if (!m) return "Use the format MM/DD/YYYY, for example 04/23/2001.";
+      var mo = +m[1], da = +m[2], yr = +m[3];
+      if (mo < 1 || mo > 12) return "The month must be between 01 and 12.";
+      if (da < 1) return "The day must be 01 or higher.";
+      var leap = (yr % 4 === 0 && yr % 100 !== 0) || yr % 400 === 0;
+      var daysInMonth = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][mo - 1];
+      if (da > daysInMonth) return MONTHS[mo - 1] + " " + yr + " only has " + daysInMonth + " days.";
+      var now = new Date();
+      var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      var birth = new Date(yr, mo - 1, da);
+      birth.setFullYear(yr); // years 0-99 are treated as 1900s by the Date constructor
+      if (birth > today) return "Warning: that date is in the future. Please enter your actual birth date.";
+      if (yr < 1900) return "Warning: that year is before 1900. Please check the year.";
+      var age = today.getFullYear() - yr;
+      if (today < new Date(today.getFullYear(), mo - 1, da)) age--;
+      if (age > 120) return "Warning: that would make you over 120 years old. Please check the year.";
+      return "";
+    }
+
+    function checkMessage(value) {
+      var v = value.trim();
+      if (!v) return "Please enter a message.";
+      if (v.length < 10) return "Your message needs at least 10 characters. You have " + v.length + ".";
+      if (!/\p{L}/u.test(v)) return "Your message needs to include some words.";
+      if (v.length > 1000) return "Your message is too long. The limit is 1000 characters.";
+      return "";
+    }
+
+    /* ---------- human check ---------- */
+    var answer = 0;
+    function newQuestion() {
+      var a = 2 + Math.floor(Math.random() * 9);
+      var b = 2 + Math.floor(Math.random() * 9);
+      var type = Math.floor(Math.random() * 3);
+      if (type === 0) { answer = a + b; $("question").textContent = "What is " + a + " + " + b + "?"; }
+      else if (type === 1) { if (b > a) { var t = a; a = b; b = t; } answer = a - b; $("question").textContent = "What is " + a + " − " + b + "?"; }
+      else { answer = a * b; $("question").textContent = "What is " + a + " × " + b + "?"; }
+      $("confirm").value = "";
+    }
+    function checkConfirm(value) {
+      var v = value.trim();
+      if (!v) return "Please answer the question.";
+      if (!/^\d+$/.test(v)) return "Enter your answer as a number.";
+      if (parseInt(v, 10) !== answer) return "That answer is not correct. Try the new question.";
+      return "";
+    }
+    $("newQuestion").addEventListener("click", function () { newQuestion(); clearState($("confirm")); $("confirm").focus(); });
+    newQuestion();
+
+    /* ---------- wiring ---------- */
+    var fields = [
+      { id: "firstname", check: checkName("first name") },
+      { id: "lastname",  check: checkName("last name") },
+      { id: "address",   check: checkAddress },
+      { id: "address2",  check: checkAddress2 },
+      { id: "city",      check: checkCity },
+      { id: "state",     check: checkState },
+      { id: "zip",       check: checkZip },
+      { id: "phone",     check: checkPhone },
+      { id: "email",     check: checkEmail },
+      { id: "birthdate", check: checkBirthdate },
+      { id: "message",   check: checkMessage },
+      { id: "confirm",   check: checkConfirm }
+    ];
+
+    function clearState(el) {
+      el.removeAttribute("aria-invalid");
+      el.classList.remove("valid");
+      $("err-" + el.id).textContent = "";
+    }
+
+    function validateField(f, showValid) {
+      var el = $(f.id);
+      var msg = f.check(el.value);
+      $("err-" + f.id).textContent = msg;
+      if (msg) {
+        el.setAttribute("aria-invalid", "true");
+        el.classList.remove("valid");
+      } else {
+        el.removeAttribute("aria-invalid");
+        // optional field left empty should not turn green
+        if (showValid && el.value.trim() !== "") el.classList.add("valid"); else el.classList.remove("valid");
+      }
+      return msg;
+    }
+
+    fields.forEach(function (f) {
+      var el = $(f.id);
+      var touched = false;
+      el.addEventListener("blur", function () { touched = true; validateField(f, true); });
+      var evt = el.tagName === "SELECT" ? "change" : "input";
+      el.addEventListener(evt, function () { if (touched || el.getAttribute("aria-invalid") === "true") validateField(f, true); });
+    });
+
+    // message counter
+    var msgEl = $("message");
+    function updateCounter() { $("counter").textContent = msgEl.value.length + " / 1000"; }
+    msgEl.addEventListener("input", updateCounter);
+
+    /* ---------- restore data when coming back with the "Edit" button ---------- */
+    function loadSaved() {
+      var json = null;
+      try { json = sessionStorage.getItem("cop4813_form"); } catch (e) {}
+      if (!json) {
+        try { var p = new URLSearchParams(location.search).get("d"); if (p) json = decodeURIComponent(escape(atob(p))); } catch (e) {}
+      }
+      if (!json) return;
+      try {
+        var data = JSON.parse(json);
+        fields.forEach(function (f) { if (f.id !== "confirm" && typeof data[f.id] === "string") $(f.id).value = data[f.id]; });
+        updateCounter();
+      } catch (e) { /* ignore bad data */ }
+    }
+    loadSaved();
+
+    /* ---------- submit ---------- */
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var summary = $("formSummary");
+
+      // bots fill the hidden field; quietly stop
+      if ($("website").value !== "") { summary.textContent = "Something went wrong. Please reload the page and try again."; return; }
+
+      var firstBad = null, count = 0;
+      fields.forEach(function (f) {
+        var msg = validateField(f, true);
+        if (msg) { count++; if (!firstBad) firstBad = $(f.id); }
+      });
+
+      if (count > 0) {
+        summary.textContent = count === 1
+          ? "Please fix the 1 field marked below before continuing."
+          : "Please fix the " + count + " fields marked below before continuing.";
+        // after a wrong answer, hand out a fresh question so answers cannot be guessed repeatedly
+        if ($("confirm").getAttribute("aria-invalid") === "true" && $("confirm").value.trim() !== "") { newQuestion(); }
+        firstBad.focus();
+        return;
+      }
+      summary.textContent = "";
+
+      var data = {};
+      fields.forEach(function (f) { data[f.id] = $(f.id).value.trim(); });
+      data.confirm = "Human check passed";
+      var json = JSON.stringify(data);
+      var saved = false;
+      try { sessionStorage.setItem("cop4813_form", json); saved = true; } catch (err) {}
+      var url = "confirm.html";
+      if (!saved) url += "?d=" + encodeURIComponent(btoa(unescape(encodeURIComponent(json))));
+      window.location.href = url;
+    });
+
+    // Clear form button: also wipe saved data, messages, and states
+    form.addEventListener("reset", function () {
+      try { sessionStorage.removeItem("cop4813_form"); } catch (e) {}
+      $("formSummary").textContent = "";
+      fields.forEach(function (f) { clearState($(f.id)); });
+      setTimeout(function () { updateCounter(); newQuestion(); }, 0);
+    });
+  })();
+  </script>
+</body>
+</html>
