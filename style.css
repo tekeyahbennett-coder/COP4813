@@ -2,14 +2,27 @@
    style.css
    Single external stylesheet for Te'Keyah Bennett's COP4813 web site.
    Plain, high-contrast layout: black text on white, one accent color.
+   Includes an optional dark theme, toggled by script.js.
    ========================================================================== */
 
 :root {
   --accent: #6a4c93;      /* single accent color, used sparingly (lavender) */
+  --nav-bg: #6a4c93;      /* nav bar stays this color in both themes */
   --text: #1a1a1a;        /* near-black body text */
   --bg: #ffffff;          /* white background */
   --border: #cccccc;
+  --muted: #444444;
   --focus: #b45309;       /* distinct, high-contrast focus outline color */
+}
+
+:root[data-theme="dark"] {
+  --accent: #c3a6e8;
+  --nav-bg: #4a3672;
+  --text: #f0eaf7;
+  --bg: #1e1a2b;
+  --border: #4a4160;
+  --muted: #c9bfe0;
+  --focus: #ffb454;
 }
 
 * {
@@ -34,7 +47,7 @@ body {
   position: absolute;
   left: -999px;
   top: 0;
-  background: var(--accent);
+  background: var(--nav-bg);
   color: #ffffff;
   padding: 0.75em 1em;
   z-index: 100;
@@ -65,12 +78,12 @@ header h1 {
 header p.tagline {
   margin: 0;
   font-style: italic;
-  color: #444444;
+  color: var(--muted);
 }
 
 /* Primary navigation menu */
 nav.main-nav {
-  background-color: var(--accent);
+  background-color: var(--nav-bg);
 }
 
 nav.main-nav ul {
@@ -79,10 +92,15 @@ nav.main-nav ul {
   padding: 0;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 nav.main-nav li {
   margin: 0;
+}
+
+nav.main-nav li.theme-toggle-item {
+  margin-left: auto;
 }
 
 nav.main-nav a {
@@ -98,12 +116,32 @@ nav.main-nav a {
 nav.main-nav a:hover,
 nav.main-nav a:focus {
   background-color: #ffffff;
-  color: var(--accent);
+  color: var(--nav-bg);
 }
 
 nav.main-nav a[aria-current="page"] {
   background-color: #ffffff;
-  color: var(--accent);
+  color: var(--nav-bg);
+}
+
+/* Theme toggle button, styled to match the nav bar */
+.theme-toggle {
+  display: block;
+  padding: 0.85em 1.25em;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus {
+  background-color: #ffffff;
+  color: var(--nav-bg);
 }
 
 main {
@@ -130,6 +168,10 @@ a:visited {
   color: #4a2e63;
 }
 
+:root[data-theme="dark"] a:visited {
+  color: #ddb8fa;
+}
+
 ul.plain-list,
 ol.plain-list {
   padding-left: 1.25rem;
@@ -141,6 +183,7 @@ ol.plain-list {
   height: auto;
   margin: 1rem 0 1.5rem 0;
   border: 1px solid var(--border);
+  background-color: #ffffff;
 }
 
 .card {
@@ -155,7 +198,7 @@ ol.plain-list {
 
 .note {
   font-size: 0.9rem;
-  color: #444444;
+  color: var(--muted);
 }
 
 footer {
@@ -164,11 +207,53 @@ footer {
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.9rem;
-  color: #444444;
+  color: var(--muted);
+}
+
+/* Back-to-top button, added as a small progressive-enhancement extra */
+.back-to-top {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--nav-bg);
+  color: #ffffff;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  background-color: var(--accent);
+}
+
+.back-to-top:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
 }
 
 @media (max-width: 40rem) {
   nav.main-nav ul {
     flex-direction: column;
+  }
+
+  nav.main-nav li.theme-toggle-item {
+    margin-left: 0;
+  }
+
+  .theme-toggle {
+    width: 100%;
+    text-align: left;
   }
 }
