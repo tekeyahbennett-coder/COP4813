@@ -3,236 +3,128 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Damped Oscillator Calculator</title>
+<title>Damped Spring Calculator</title>
+<!-- Chart.js plotting library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  body { font-family: Arial, Helvetica, sans-serif; max-width: 960px; margin: 0 auto; padding: 16px; color: #222; background: #fff; }
-  h1 { font-size: 1.6em; margin-bottom: 4px; }
-  .equation { font-family: "Times New Roman", serif; font-size: 1.15em; background: #f4f4f4; padding: 10px; border-left: 4px solid #555; margin: 10px 0; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 20px; margin: 14px 0; }
-  label { display: block; font-weight: bold; font-size: 0.9em; margin-bottom: 3px; }
-  input { width: 100%; padding: 6px; box-sizing: border-box; font-size: 1em; }
-  button { padding: 10px 22px; font-size: 1em; cursor: pointer; margin-right: 8px; }
-  #error { color: #b00020; font-weight: bold; margin: 10px 0; }
-  table { border-collapse: collapse; margin: 10px 0; }
-  td, th { border: 1px solid #ccc; padding: 6px 10px; text-align: left; }
-  th { background: #f4f4f4; }
-  #chartBox { position: relative; height: 420px; margin-top: 16px; }
-  .note { font-size: 0.9em; color: #555; }
+  body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 16px; background: #fff; color: #222; }
+  .equation { background: #f4f4f4; padding: 10px; border-left: 4px solid #555; font-size: 1.1em; }
+  label { display: inline-block; width: 230px; margin: 6px 0; }
+  input { width: 100px; padding: 4px; }
+  button { margin-top: 10px; padding: 8px 18px; font-size: 1em; }
+  #output { margin-top: 15px; }
+  #chartBox { height: 400px; margin-top: 15px; }
 </style>
 </head>
 <body>
 
 <p><a href="assignments.html">&larr; Back to My Assignments</a></p>
-<h1>Damped Harmonic Oscillator Calculator</h1>
-<p>This calculator solves for the displacement of a mass on a spring with damping (friction), given the physical
-properties of the system and its starting conditions, and plots displacement x (dependent variable, Y axis)
-against time t (independent variable, X axis).</p>
+<h1>Damped Spring Calculator</h1>
+<p>
+A weight bouncing on a spring slowly stops because of friction. This calculator finds the
+position of the weight (x) at each time (t) and plots it.
+</p>
 
 <div class="equation">
-  Governing equation: &nbsp; m&middot;x'' + b&middot;x' + k&middot;x = 0<br><br>
-  Underdamped solution (&zeta; &lt; 1): &nbsp;
-  x(t) = e<sup>&minus;&gamma;t</sup> [ x<sub>0</sub> cos(&omega;<sub>d</sub>t) + ((v<sub>0</sub> + &gamma;x<sub>0</sub>) / &omega;<sub>d</sub>) sin(&omega;<sub>d</sub>t) ]<br>
-  where &gamma; = b / 2m, &nbsp; &omega;<sub>0</sub> = &radic;(k/m), &nbsp; &omega;<sub>d</sub> = &radic;(&omega;<sub>0</sub><sup>2</sup> &minus; &gamma;<sup>2</sup>), &nbsp; &zeta; = &gamma; / &omega;<sub>0</sub><br>
-  <span class="note">(Critically damped and overdamped cases are also handled.)</span>
+  <strong>Equation:</strong> &nbsp; x(t) = A &middot; e<sup>&minus;(b / 2m)t</sup> &middot; cos(&omega;t)
+  &nbsp;&nbsp; where &nbsp; &omega; = &radic;( k/m &minus; (b / 2m)<sup>2</sup> )
 </div>
 
-<div class="grid">
-  <div><label for="m">Mass m (kg)</label><input id="m" type="number" step="any" value="1"></div>
-  <div><label for="k">Spring constant k (N/m)</label><input id="k" type="number" step="any" value="10"></div>
-  <div><label for="b">Damping coefficient b (kg/s)</label><input id="b" type="number" step="any" value="0.5"></div>
-  <div><label for="x0">Initial displacement x<sub>0</sub> (m)</label><input id="x0" type="number" step="any" value="1"></div>
-  <div><label for="v0">Initial velocity v<sub>0</sub> (m/s)</label><input id="v0" type="number" step="any" value="0"></div>
-  <div><label for="tmin">Start time t<sub>min</sub> (s)</label><input id="tmin" type="number" step="any" value="0"></div>
-  <div><label for="tmax">End time t<sub>max</sub> (s)</label><input id="tmax" type="number" step="any" value="20"></div>
-  <div><label for="dt">Time step &Delta;t (s)</label><input id="dt" type="number" step="any" value="0.05"></div>
-</div>
+<h3>Inputs</h3>
+<label for="A">Starting stretch A (m):</label> <input id="A" type="number" value="1"><br>
+<label for="m">Mass m (kg):</label> <input id="m" type="number" value="1"><br>
+<label for="k">Spring stiffness k (N/m):</label> <input id="k" type="number" value="10"><br>
+<label for="b">Friction b (kg/s):</label> <input id="b" type="number" value="0.5"><br>
+<label for="tStart">Start time (s):</label> <input id="tStart" type="number" value="0"><br>
+<label for="tEnd">End time (s):</label> <input id="tEnd" type="number" value="20"><br>
 
-<button id="calcBtn">Calculate &amp; Plot</button>
-<button id="resetBtn">Reset to Example Values</button>
-<div id="error"></div>
+<button onclick="calculate()">Calculate &amp; Plot</button>
 
-<h2>Results</h2>
-<table id="results"></table>
-
-<h3>Solutions: times where x(t) = 0 within the range</h3>
-<p id="zeros" class="note"></p>
-
-<div id="chartBox"><canvas id="plot"></canvas></div>
+<div id="output"></div>
+<div id="chartBox"><canvas id="myChart"></canvas></div>
 
 <script>
-  var defaults = { m: 1, k: 10, b: 0.5, x0: 1, v0: 0, tmin: 0, tmax: 20, dt: 0.05 };
-  var chart = null;
+var myChart = null;   // holds the chart so we can redraw it
 
-  function readInputs() {
-    var p = {};
-    for (var key in defaults) {
-      p[key] = parseFloat(document.getElementById(key).value);
-      if (isNaN(p[key])) throw new Error("Please enter a number for " + key + ".");
-    }
-    if (p.m <= 0) throw new Error("Mass m must be greater than 0.");
-    if (p.k <= 0) throw new Error("Spring constant k must be greater than 0.");
-    if (p.b < 0) throw new Error("Damping coefficient b cannot be negative.");
-    if (p.tmax <= p.tmin) throw new Error("t max must be greater than t min.");
-    if (p.dt <= 0) throw new Error("Time step must be greater than 0.");
-    if ((p.tmax - p.tmin) / p.dt > 20000) throw new Error("Too many points. Use a larger time step or a smaller range.");
-    return p;
+function calculate() {
+  // 1. Read the values the user typed in
+  var A = parseFloat(document.getElementById("A").value);
+  var m = parseFloat(document.getElementById("m").value);
+  var k = parseFloat(document.getElementById("k").value);
+  var b = parseFloat(document.getElementById("b").value);
+  var tStart = parseFloat(document.getElementById("tStart").value);
+  var tEnd = parseFloat(document.getElementById("tEnd").value);
+  var output = document.getElementById("output");
+
+  // 2. Check the inputs
+  if (m <= 0 || k <= 0 || b < 0 || tEnd <= tStart) {
+    output.innerHTML = "<p style='color:red'>Please use mass &gt; 0, stiffness &gt; 0, friction &ge; 0, and an end time bigger than the start time.</p>";
+    return;
   }
 
-  // Builds the displacement function x(t) for the given system.
-  function buildSystem(p) {
-    var gamma = p.b / (2 * p.m);
-    var w0 = Math.sqrt(p.k / p.m);
-    var zeta = gamma / w0;
-    var sys = { gamma: gamma, w0: w0, zeta: zeta, wd: null, envelope: null };
+  // 3. Work out the decay rate and the bounce speed (omega)
+  var decay = b / (2 * m);
+  var omegaSquared = k / m - decay * decay;
+  if (omegaSquared <= 0) {
+    output.innerHTML = "<p style='color:red'>The friction is too high, so the spring will not bounce. Try a smaller friction value.</p>";
+    return;
+  }
+  var omega = Math.sqrt(omegaSquared);
+  var period = 2 * Math.PI / omega;   // time for one full bounce
 
-    if (Math.abs(gamma - w0) < 1e-9 * w0) {
-      sys.regime = "Critically damped (ζ = 1)";
-      var B = p.v0 + gamma * p.x0;
-      sys.x = function (t) { return Math.exp(-gamma * t) * (p.x0 + B * t); };
-    } else if (gamma < w0) {
-      var wd = Math.sqrt(w0 * w0 - gamma * gamma);
-      var C = (p.v0 + gamma * p.x0) / wd;
-      var R = Math.sqrt(p.x0 * p.x0 + C * C);
-      sys.wd = wd;
-      sys.regime = (p.b === 0) ? "Undamped (ζ = 0)" : "Underdamped (ζ < 1)";
-      sys.x = function (t) { return Math.exp(-gamma * t) * (p.x0 * Math.cos(wd * t) + C * Math.sin(wd * t)); };
-      sys.envelope = function (t) { return R * Math.exp(-gamma * t); };
-    } else {
-      var s = Math.sqrt(gamma * gamma - w0 * w0);
-      var r1 = -gamma + s, r2 = -gamma - s;
-      var C1 = (p.v0 - r2 * p.x0) / (r1 - r2);
-      var C2 = p.x0 - C1;
-      sys.regime = "Overdamped (ζ > 1)";
-      sys.x = function (t) { return C1 * Math.exp(r1 * t) + C2 * Math.exp(r2 * t); };
-    }
-    return sys;
+  // 4. Calculate x at many time values for the plot
+  var xValues = [];
+  var step = (tEnd - tStart) / 400;
+  for (var t = tStart; t <= tEnd + step / 2; t += step) {
+    var x = A * Math.exp(-decay * t) * Math.cos(omega * t);
+    xValues.push({ x: t, y: x });
   }
 
-  // Finds the times where x(t) crosses zero using sign changes plus bisection.
-  function findZeros(f, tmin, tmax, dt) {
-    var zeros = [];
-    var tPrev = tmin, fPrev = f(tmin);
-    if (fPrev === 0) zeros.push(tmin);
-    var n = Math.ceil((tmax - tmin) / dt);
-    for (var i = 1; i <= n; i++) {
-      var t = Math.min(tmin + i * dt, tmax);
-      var ft = f(t);
-      if (ft === 0) {
-        zeros.push(t);
-      } else if (fPrev !== 0 && fPrev * ft < 0) {
-        var lo = tPrev, hi = t, flo = fPrev;
-        for (var j = 0; j < 60; j++) {
-          var mid = (lo + hi) / 2, fm = f(mid);
-          if (flo * fm <= 0) { hi = mid; } else { lo = mid; flo = fm; }
-        }
-        zeros.push((lo + hi) / 2);
-      }
-      tPrev = t; fPrev = ft;
-    }
-    return zeros;
+  // 5. Find the solutions: times when x = 0 (the weight passes the middle).
+  //    cos(omega * t) = 0 when omega * t = pi/2, 3pi/2, 5pi/2, ...
+  var solutions = [];
+  for (var n = 0; n < 1000; n++) {
+    var tZero = (Math.PI / 2 + n * Math.PI) / omega;
+    if (tZero > tEnd) break;
+    if (tZero >= tStart) solutions.push(tZero.toFixed(3));
   }
 
-  function fmt(v, d) { return (v === null || v === undefined) ? "N/A" : Number(v).toFixed(d === undefined ? 4 : d); }
+  // 6. Show the results
+  output.innerHTML =
+    "<h3>Results</h3>" +
+    "<p>Bounce speed &omega; = " + omega.toFixed(4) + " rad/s</p>" +
+    "<p>Time for one bounce = " + period.toFixed(4) + " s</p>" +
+    "<p>Position at end time: x(" + tEnd + ") = " + (A * Math.exp(-decay * tEnd) * Math.cos(omega * tEnd)).toFixed(4) + " m</p>" +
+    "<p><strong>Solutions (x = 0) in the range:</strong> " +
+    (solutions.length ? "t = " + solutions.join(" s, t = ") + " s" : "none in this range") + "</p>";
 
-  function calculate() {
-    var errBox = document.getElementById("error");
-    errBox.textContent = "";
-    var p;
-    try { p = readInputs(); } catch (e) { errBox.textContent = e.message; return; }
-
-    var sys = buildSystem(p);
-
-    // Generate the data points
-    var pts = [], upper = [], lower = [];
-    var maxAbs = 0, tAtMax = p.tmin;
-    var n = Math.ceil((p.tmax - p.tmin) / p.dt);
-    for (var i = 0; i <= n; i++) {
-      var t = Math.min(p.tmin + i * p.dt, p.tmax);
-      var x = sys.x(t);
-      pts.push({ x: t, y: x });
-      if (Math.abs(x) > maxAbs) { maxAbs = Math.abs(x); tAtMax = t; }
-      if (sys.envelope) {
-        upper.push({ x: t, y: sys.envelope(t) });
-        lower.push({ x: t, y: -sys.envelope(t) });
+  // 7. Draw the plot (remove the old one first)
+  if (myChart) myChart.destroy();
+  myChart = new Chart(document.getElementById("myChart"), {
+    type: "line",
+    data: {
+      datasets: [{
+        label: "Position x(t)",
+        data: xValues,
+        borderColor: "blue",
+        borderWidth: 2,
+        pointRadius: 0
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: { title: { display: true, text: "Damped Spring: Position vs. Time" } },
+      scales: {
+        x: { type: "linear", title: { display: true, text: "Time t (s)" } },
+        y: { title: { display: true, text: "Position x (m)" } }
       }
     }
+  });
+}
 
-    var zeros = findZeros(sys.x, p.tmin, p.tmax, p.dt);
-
-    // Results table
-    var rows = [
-      ["Natural frequency ω₀ = √(k/m)", fmt(sys.w0) + " rad/s"],
-      ["Decay rate γ = b / 2m", fmt(sys.gamma) + " 1/s"],
-      ["Damping ratio ζ = γ / ω₀", fmt(sys.zeta)],
-      ["Damping regime", sys.regime],
-      ["Damped frequency ωd", sys.wd ? fmt(sys.wd) + " rad/s" : "N/A (no oscillation)"],
-      ["Damped period Td = 2π / ωd", sys.wd ? fmt(2 * Math.PI / sys.wd) + " s" : "N/A"],
-      ["x(t) at t = " + fmt(p.tmax, 2) + " s", fmt(sys.x(p.tmax)) + " m"],
-      ["Largest |x| in range", fmt(maxAbs) + " m at t = " + fmt(tAtMax, 3) + " s"],
-      ["Number of zero crossings in range", String(zeros.length)]
-    ];
-    var html = "<tr><th>Quantity</th><th>Value</th></tr>";
-    rows.forEach(function (r) { html += "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>"; });
-    document.getElementById("results").innerHTML = html;
-
-    // Zero crossings list
-    var zBox = document.getElementById("zeros");
-    if (zeros.length === 0) {
-      zBox.textContent = "The mass does not pass through equilibrium (x = 0) within this time range.";
-    } else {
-      var shown = zeros.slice(0, 40).map(function (z) { return "t = " + fmt(z) + " s"; }).join(", ");
-      zBox.textContent = shown + (zeros.length > 40 ? " ... (" + (zeros.length - 40) + " more)" : "");
-    }
-
-    drawPlot(pts, upper, lower);
-  }
-
-  function drawPlot(pts, upper, lower) {
-    var datasets = [{
-      label: "Displacement x(t) (m)",
-      data: pts,
-      borderColor: "#1f4e9c",
-      borderWidth: 2,
-      pointRadius: 0,
-      fill: false,
-      tension: 0
-    }];
-    if (upper.length) {
-      datasets.push({ label: "Decay envelope", data: upper, borderColor: "#c0392b", borderWidth: 1, borderDash: [6, 4], pointRadius: 0, fill: false });
-      datasets.push({ label: "Decay envelope (lower)", data: lower, borderColor: "#c0392b", borderWidth: 1, borderDash: [6, 4], pointRadius: 0, fill: false });
-    }
-
-    if (chart) chart.destroy();
-    chart = new Chart(document.getElementById("plot"), {
-      type: "line",
-      data: { datasets: datasets },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: false,
-        interaction: { mode: "nearest", intersect: false },
-        plugins: {
-          title: { display: true, text: "Damped Harmonic Oscillator: Displacement vs. Time", font: { size: 16 } },
-          legend: { labels: { filter: function (item) { return item.text !== "Decay envelope (lower)"; } } },
-          tooltip: { callbacks: { label: function (c) { return c.dataset.label + ": " + c.parsed.y.toFixed(4) + " at t = " + c.parsed.x.toFixed(3) + " s"; } } }
-        },
-        scales: {
-          x: { type: "linear", title: { display: true, text: "Time t (s)" } },
-          y: { title: { display: true, text: "Displacement x (m)" } }
-        }
-      }
-    });
-  }
-
-  function resetValues() {
-    for (var key in defaults) document.getElementById(key).value = defaults[key];
-    calculate();
-  }
-
-  document.getElementById("calcBtn").addEventListener("click", calculate);
-  document.getElementById("resetBtn").addEventListener("click", resetValues);
-  window.addEventListener("load", calculate);
+// Run once when the page loads so the example numbers show right away
+window.onload = calculate;
 </script>
+
 </body>
 </html>
