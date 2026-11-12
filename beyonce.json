@@ -1,0 +1,64 @@
+{
+  "artist": "Beyoncé",
+  "fullName": "Beyoncé Giselle Knowles-Carter",
+  "hometown": "Houston, Texas",
+  "soloDebutYear": 2003,
+  "albums": [
+    {
+      "title": "Dangerously in Love",
+      "releaseDate": "2003-06-20",
+      "label": "Music World / Columbia",
+      "billboard200Peak": 1,
+      "albumGrammy": "Best Contemporary R&B Album"
+    },
+    {
+      "title": "B'Day",
+      "releaseDate": "2006-08-31",
+      "label": "Music World / Sony Urban / Columbia",
+      "billboard200Peak": 1,
+      "albumGrammy": "Best Contemporary R&B Album"
+    },
+    {
+      "title": "I Am... Sasha Fierce",
+      "releaseDate": "2008-11-12",
+      "label": "Music World / Columbia",
+      "billboard200Peak": 1,
+      "albumGrammy": "Best Contemporary R&B Album"
+    },
+    {
+      "title": "4",
+      "releaseDate": "2011-06-28",
+      "label": "Parkwood / Columbia",
+      "billboard200Peak": 1,
+      "albumGrammy": null
+    },
+    {
+      "title": "Beyoncé",
+      "releaseDate": "2013-12-13",
+      "label": "Parkwood / Columbia",
+      "billboard200Peak": 1,
+      "albumGrammy": null
+    },
+    {
+      "title": "Lemonade",
+      "releaseDate": "2016-04-23",
+      "label": "Parkwood / Columbia",
+      "billboard200Peak": 1,
+      "albumGrammy": "Best Urban Contemporary Album"
+    },
+    {
+      "title": "Renaissance",
+      "releaseDate": "2022-07-29",
+      "label": "Parkwood / Columbia",
+      "billboard200Peak": 1,
+      "albumGrammy": "Best Dance/Electronic Album"
+    },
+    {
+      "title": "Cowboy Carter",
+      "releaseDate": "2024-03-29",
+      "label": "Parkwood / Columbia",
+      "billboard200Peak": 1,
+      "albumGrammy": "Album of the Year; Best Country Album"
+    }
+  ]
+}

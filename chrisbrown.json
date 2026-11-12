@@ -1,0 +1,92 @@
+{
+  "artist": "Chris Brown",
+  "fullName": "Christopher Maurice Brown",
+  "hometown": "Tappahannock, Virginia",
+  "soloDebutYear": 2005,
+  "albums": [
+    {
+      "title": "Chris Brown",
+      "releaseDate": "2005-11-29",
+      "label": "Jive",
+      "billboard200Peak": 2,
+      "albumGrammy": null
+    },
+    {
+      "title": "Exclusive",
+      "releaseDate": "2007-11-06",
+      "label": "Jive",
+      "billboard200Peak": 4,
+      "albumGrammy": null
+    },
+    {
+      "title": "Graffiti",
+      "releaseDate": "2009-12-08",
+      "label": "Jive",
+      "billboard200Peak": 7,
+      "albumGrammy": null
+    },
+    {
+      "title": "F.A.M.E.",
+      "releaseDate": "2011-03-18",
+      "label": "Jive",
+      "billboard200Peak": 1,
+      "albumGrammy": "Best R&B Album"
+    },
+    {
+      "title": "Fortune",
+      "releaseDate": "2012-07-03",
+      "label": "RCA",
+      "billboard200Peak": 1,
+      "albumGrammy": null
+    },
+    {
+      "title": "X",
+      "releaseDate": "2014-09-16",
+      "label": "RCA",
+      "billboard200Peak": 2,
+      "albumGrammy": null
+    },
+    {
+      "title": "Royalty",
+      "releaseDate": "2015-12-18",
+      "label": "RCA",
+      "billboard200Peak": 3,
+      "albumGrammy": null
+    },
+    {
+      "title": "Heartbreak on a Full Moon",
+      "releaseDate": "2017-10-31",
+      "label": "RCA",
+      "billboard200Peak": 3,
+      "albumGrammy": null
+    },
+    {
+      "title": "Indigo",
+      "releaseDate": "2019-06-28",
+      "label": "RCA",
+      "billboard200Peak": 1,
+      "albumGrammy": null
+    },
+    {
+      "title": "Breezy",
+      "releaseDate": "2022-06-24",
+      "label": "RCA",
+      "billboard200Peak": 4,
+      "albumGrammy": null
+    },
+    {
+      "title": "11:11",
+      "releaseDate": "2023-11-10",
+      "label": "RCA",
+      "billboard200Peak": 9,
+      "albumGrammy": "Best R&B Album"
+    },
+    {
+      "title": "Brown",
+      "releaseDate": "2026-05-08",
+      "label": "RCA",
+      "billboard200Peak": 7,
+      "albumGrammy": null
+    }
+  ]
+}
