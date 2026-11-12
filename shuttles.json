@@ -1,0 +1,67 @@
+{
+  "title": "NASA Space Shuttle Orbiters",
+  "launchSite": "Kennedy Space Center, Florida",
+  "program": {
+    "name": "Space Shuttle Program",
+    "firstLaunch": 1981,
+    "lastLaunch": 2011,
+    "totalMissions": 135
+  },
+  "orbiters": [
+    {
+      "name": "Columbia",
+      "designation": "OV-102",
+      "firstMission": "STS-1",
+      "firstFlightYear": 1981,
+      "finalMission": "STS-107",
+      "finalFlightYear": 2003,
+      "missionsFlown": 28,
+      "status": "Lost",
+      "location": null
+    },
+    {
+      "name": "Challenger",
+      "designation": "OV-099",
+      "firstMission": "STS-6",
+      "firstFlightYear": 1983,
+      "finalMission": "STS-51-L",
+      "finalFlightYear": 1986,
+      "missionsFlown": 10,
+      "status": "Lost",
+      "location": null
+    },
+    {
+      "name": "Discovery",
+      "designation": "OV-103",
+      "firstMission": "STS-41-D",
+      "firstFlightYear": 1984,
+      "finalMission": "STS-133",
+      "finalFlightYear": 2011,
+      "missionsFlown": 39,
+      "status": "Retired",
+      "location": "Steven F. Udvar-Hazy Center, Chantilly, Virginia"
+    },
+    {
+      "name": "Atlantis",
+      "designation": "OV-104",
+      "firstMission": "STS-51-J",
+      "firstFlightYear": 1985,
+      "finalMission": "STS-135",
+      "finalFlightYear": 2011,
+      "missionsFlown": 33,
+      "status": "Retired",
+      "location": "Kennedy Space Center Visitor Complex, Florida"
+    },
+    {
+      "name": "Endeavour",
+      "designation": "OV-105",
+      "firstMission": "STS-49",
+      "firstFlightYear": 1992,
+      "finalMission": "STS-134",
+      "finalFlightYear": 2011,
+      "missionsFlown": 25,
+      "status": "Retired",
+      "location": "California Science Center, Los Angeles, California"
+    }
+  ]
+}
