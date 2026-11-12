@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assignment 7 - Drag and Drop Cards</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0b6b3a;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+  h1 { margin: 0 0 6px; }
+  p.instructions { margin: 0 0 18px; }
+
+  #controls button {
+    font-size: 16px;
+    padding: 10px 22px;
+    margin: 0 6px;
+    border: none;
+    border-radius: 6px;
+    background: #ffd54a;
+    color: #222;
+    cursor: pointer;
+  }
+  #controls button:disabled { background: #999; cursor: not-allowed; }
+
+  #table {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  #hand {
+    display: flex;
+    gap: 10px;
+    min-height: 160px;
+    min-width: 300px;
+    padding: 12px;
+    border: 2px dashed rgba(255,255,255,0.4);
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .card {
+    width: 100px;
+    height: 140px;
+    cursor: grab;
+    border-radius: 8px;
+    box-shadow: 2px 3px 6px rgba(0,0,0,0.4);
+    transition: transform 0.15s;
+  }
+  .card:hover { transform: translateY(-8px); }
+  .card.dragging { opacity: 0.4; }
+
+  #discard {
+    width: 140px;
+    height: 180px;
+    border: 3px dashed #fff;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.25);
+    position: relative;
+  }
+  #discard.over { background: rgba(255,213,74,0.45); border-color: #ffd54a; }
+  #discard .label { font-weight: bold; font-size: 18px; }
+  #discard .count { font-size: 14px; margin-top: 4px; }
+  #discard img.top {
+    position: absolute;
+    width: 100px;
+    height: 140px;
+    border-radius: 8px;
+    opacity: 0.85;
+  }
+  #discard .label, #discard .count { position: relative; z-index: 1; text-shadow: 0 0 4px #000; }
+
+  #message {
+    margin-top: 24px;
+    min-height: 28px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffd54a;
+  }
+  #log {
+    margin: 10px auto 0;
+    max-width: 500px;
+    text-align: left;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Drag and Drop Card Game</h1>
+<p class="instructions">Click <strong>Deal</strong> to deal 5 cards. Drag any card onto the <strong>Discard Pile</strong> to get rid of it, and a new card will be dealt in its place.</p>
+
+<div id="controls">
+  <button id="dealBtn">Deal</button>
+  <button id="resetBtn">New Deck</button>
+</div>
+<p id="deckInfo">Cards left in deck: 52</p>
+
+<div id="table">
+  <div id="hand"></div>
+  <div id="discard">
+    <span class="label">Discard Pile</span>
+    <span class="count">0 cards</span>
+  </div>
+</div>
+
+<div id="message"></div>
+<ol id="log"></ol>
+
+<script>
+  // ----- Card data -----
+  var SUITS = [
+    { code: "S", name: "Spades",   symbol: "♠", color: "#000" },
+    { code: "H", name: "Hearts",   symbol: "♥", color: "#c00" },
+    { code: "D", name: "Diamonds", symbol: "♦", color: "#c00" },
+    { code: "C", name: "Clubs",    symbol: "♣", color: "#000" }
+  ];
+  var RANKS = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+  var RANK_NAMES = ["Ace","2","3","4","5","6","7","8","9","10","Jack","Queen","King"];
+  var HAND_SIZE = 5;
+
+  var deck = [];
+  var discardCount = 0;
+
+  // ----- Build the image for a card (an SVG image created with JavaScript) -----
+  function makeCardImage(card) {
+    var suit = card.suit;
+    var svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="140" viewBox="0 0 100 140">' +
+      '<rect x="1" y="1" width="98" height="138" rx="8" fill="#fff" stroke="#333" stroke-width="2"/>' +
+      '<text x="8" y="22" font-family="Arial" font-size="18" font-weight="bold" fill="' + suit.color + '">' + card.rank + '</text>' +
+      '<text x="8" y="40" font-family="Arial" font-size="16" fill="' + suit.color + '">' + suit.symbol + '</text>' +
+      '<text x="50" y="88" font-family="Arial" font-size="46" text-anchor="middle" fill="' + suit.color + '">' + suit.symbol + '</text>' +
+      '<g transform="rotate(180 50 70)">' +
+        '<text x="8" y="22" font-family="Arial" font-size="18" font-weight="bold" fill="' + suit.color + '">' + card.rank + '</text>' +
+        '<text x="8" y="40" font-family="Arial" font-size="16" fill="' + suit.color + '">' + suit.symbol + '</text>' +
+      '</g>' +
+      '</svg>';
+
+    var img = document.createElement("img");
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    img.alt = card.name;
+    img.title = card.name;
+    img.className = "card";
+    img.id = "card-" + card.id;
+    img.draggable = true;
+    img.dataset.name = card.name;
+
+    // Drag events on the card
+    img.addEventListener("dragstart", function (e) {
+      e.dataTransfer.setData("text/plain", img.id);
+      e.dataTransfer.effectAllowed = "move";
+      img.classList.add("dragging");
+    });
+    img.addEventListener("dragend", function () {
+      img.classList.remove("dragging");
+    });
+    return img;
+  }
+
+  // ----- Deck -----
+  function newDeck() {
+    deck = [];
+    for (var s = 0; s < SUITS.length; s++) {
+      for (var r = 0; r < RANKS.length; r++) {
+        deck.push({
+          id: SUITS[s].code + (r + 1),          // e.g. S1 = Ace of Spades
+          rank: RANKS[r],
+          suit: SUITS[s],
+          name: RANK_NAMES[r] + " of " + SUITS[s].name
+        });
+      }
+    }
+    // Fisher-Yates shuffle so no card is ever dealt twice
+    for (var i = deck.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = deck[i]; deck[i] = deck[j]; deck[j] = tmp;
+    }
+  }
+
+  function dealOne() {
+    if (deck.length === 0) return false;
+    var card = deck.pop();
+    document.getElementById("hand").appendChild(makeCardImage(card));
+    updateDeckInfo();
+    return true;
+  }
+
+  function updateDeckInfo() {
+    document.getElementById("deckInfo").textContent = "Cards left in deck: " + deck.length;
+  }
+
+  // ----- Buttons -----
+  document.getElementById("dealBtn").addEventListener("click", function () {
+    var hand = document.getElementById("hand");
+    while (hand.children.length < HAND_SIZE && dealOne()) {}
+    if (deck.length === 0) showMessage("The deck is empty. Click New Deck to start over.");
+    this.disabled = true;
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    document.getElementById("hand").innerHTML = "";
+    document.getElementById("log").innerHTML = "";
+    var discard = document.getElementById("discard");
+    var top = discard.querySelector("img.top");
+    if (top) top.remove();
+    discardCount = 0;
+    discard.querySelector(".count").textContent = "0 cards";
+    showMessage("");
+    newDeck();
+    updateDeckInfo();
+    document.getElementById("dealBtn").disabled = false;
+  });
+
+  // ----- Drop target: the discard pile -----
+  var discard = document.getElementById("discard");
+
+  discard.addEventListener("dragover", function (e) {
+    e.preventDefault();               // required to allow a drop
+    e.dataTransfer.dropEffect = "move";
+  });
+  discard.addEventListener("dragenter", function (e) {
+    e.preventDefault();
+    discard.classList.add("over");
+  });
+  discard.addEventListener("dragleave", function () {
+    discard.classList.remove("over");
+  });
+
+  // ----- The triggered event -----
+  discard.addEventListener("drop", function (e) {
+    e.preventDefault();
+    discard.classList.remove("over");
+
+    var cardId = e.dataTransfer.getData("text/plain");
+    var card = document.getElementById(cardId);
+    if (!card) return;
+
+    var name = card.dataset.name;
+
+    // Show the discarded card on top of the pile
+    var old = discard.querySelector("img.top");
+    if (old) old.remove();
+    var top = document.createElement("img");
+    top.src = card.src;
+    top.alt = name;
+    top.className = "top";
+    discard.insertBefore(top, discard.firstChild);
+
+    card.remove();
+    discardCount++;
+    discard.querySelector(".count").textContent = discardCount + (discardCount === 1 ? " card" : " cards");
+
+    // Let the user know the drop event fired
+    showMessage("Drop event triggered! You discarded the " + name + ".");
+    var li = document.createElement("li");
+    li.textContent = "Discarded: " + name;
+    document.getElementById("log").appendChild(li);
+
+    // Deal a replacement card
+    if (!dealOne()) {
+      showMessage("Discarded the " + name + ". No cards left in the deck to replace it.");
+    }
+  });
+
+  function showMessage(text) {
+    document.getElementById("message").textContent = text;
+  }
+
+  // Start with a fresh shuffled deck
+  newDeck();
+  updateDeckInfo();
+</script>
+</body>
+</html>
