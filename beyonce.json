@@ -3,7 +3,48 @@
   "fullName": "Beyoncé Giselle Knowles-Carter",
   "hometown": "Houston, Texas",
   "soloDebutYear": 2003,
+  "group": "Destiny's Child",
   "albums": [
+    {
+      "title": "Destiny's Child",
+      "creditedTo": "Destiny's Child",
+      "releaseDate": "1998-02-17",
+      "label": "Columbia",
+      "billboard200Peak": 67,
+      "albumGrammy": null
+    },
+    {
+      "title": "The Writing's on the Wall",
+      "creditedTo": "Destiny's Child",
+      "releaseDate": "1999-07-27",
+      "label": "Columbia",
+      "billboard200Peak": 5,
+      "albumGrammy": null
+    },
+    {
+      "title": "Survivor",
+      "creditedTo": "Destiny's Child",
+      "releaseDate": "2001-04-24",
+      "label": "Columbia",
+      "billboard200Peak": 1,
+      "albumGrammy": null
+    },
+    {
+      "title": "8 Days of Christmas",
+      "creditedTo": "Destiny's Child",
+      "releaseDate": "2001-10-30",
+      "label": "Columbia",
+      "billboard200Peak": 34,
+      "albumGrammy": null
+    },
+    {
+      "title": "Destiny Fulfilled",
+      "creditedTo": "Destiny's Child",
+      "releaseDate": "2004-11-15",
+      "label": "Columbia",
+      "billboard200Peak": 2,
+      "albumGrammy": null
+    },
     {
       "title": "Dangerously in Love",
       "releaseDate": "2003-06-20",
