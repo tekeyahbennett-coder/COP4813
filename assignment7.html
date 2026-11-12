@@ -203,6 +203,7 @@
         // Correct match: lock the fruit into the basket
         basket.querySelector(".slot").appendChild(img);
         img.draggable = false;
+        img.classList.remove("dragging");
         img.style.cursor = "default";
         basket.classList.add("matched");
         matched++;
