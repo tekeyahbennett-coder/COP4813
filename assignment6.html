@@ -53,12 +53,12 @@
 </head>
 <body>
   <main>
-    <h1>R&amp;B Studio Albums: Beyoncé, Destiny's Child and Chris Brown</h1>
+    <h1>R&amp;B Studio Albums: Beyoncé and Chris Brown</h1>
 
     <div class="controls">
       <label for="dataSelect">Show data from:</label>
       <select id="dataSelect">
-        <option value="beyonce.json">Beyoncé and Destiny's Child (beyonce.json)</option>
+        <option value="beyonce.json">Beyoncé (beyonce.json)</option>
         <option value="chrisbrown.json">Chris Brown (chrisbrown.json)</option>
         <option value="both">Both artists (both files)</option>
       </select>
@@ -143,17 +143,10 @@
     function renderSummary(artists) {
       const parts = artists.map(function (a) {
         const solo = a.albums.filter(function (x) { return !x.creditedTo; });
-        const group = a.albums.filter(function (x) { return x.creditedTo; });
         const numberOnes = solo.filter(function (x) { return x.billboard200Peak === 1; }).length;
-        let text = a.artist + " (" + a.fullName + ", from " + a.hometown + ") has released <strong>" +
+        return a.artist + " (" + a.fullName + ", from " + a.hometown + ") has released <strong>" +
           solo.length + "</strong> solo studio albums since " + a.soloDebutYear +
           ", and <strong>" + numberOnes + "</strong> of them reached No. 1 on the Billboard 200.";
-        if (group.length > 0) {
-          const groupOnes = group.filter(function (x) { return x.billboard200Peak === 1; }).length;
-          text += " She also recorded <strong>" + group.length + "</strong> studio albums as a member of " +
-            a.group + " (" + groupOnes + " reached No. 1).";
-        }
-        return text;
       });
       document.getElementById("summary").innerHTML = parts.join("<br>");
     }
