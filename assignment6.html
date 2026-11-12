@@ -99,7 +99,8 @@
 
     // Read one external JSON file and parse it into a JavaScript object
     function loadFile(fileName) {
-      return fetch(fileName).then(function (response) {
+      // "no-store" makes the browser get the newest copy, so edits to the JSON show up right away
+      return fetch(fileName, { cache: "no-store" }).then(function (response) {
         if (!response.ok) {
           throw new Error("Could not load " + fileName + " (HTTP " + response.status + ")");
         }
